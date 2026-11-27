@@ -202,3 +202,7 @@ body{font-family:var(--font-body,var(--font))}
 
 /* 숨은 재생기: 재생 화면 효과(투명, 이동)의 영향을 받지 않게 바깥에 두고, 유튜브 최소 크기(200px)를 지킴 */
 .p-yt{position:fixed;left:0;bottom:0;width:200px;height:200px;opacity:.001;pointer-events:none;overflow:hidden;z-index:-1}
+
+/* Spotify에서 듣기 버튼 (누르면 Spotify 사이트에서 제목+아티스트로 자동 검색) */
+.sp-btn{display:inline-block;font-size:.8rem;font-weight:600;color:#000;background:#1ed760;padding:7px 16px;border-radius:999px;transition:filter .2s}
+.sp-btn:hover{filter:brightness(1.12)}

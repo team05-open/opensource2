@@ -11,10 +11,12 @@
      genre:"장르",                 // 같은 장르끼리 위쪽 버튼으로 묶임
      cover:"images/앨범사진.jpg", 컬러는 앨범 표지 없을때 표시되는거   // 앨범 대표 사진. 비우면 아래 colors 색 그라데이션
      colors:["#222222","#888888"],
+     spotify:"https://open.spotify.com/album/앨범ID",   // 스포티파이 앨범 링크 (곡 링크가 없을 때 대신 재생됨. 비워도 됨)
      desc:"설명글을 추가하시오",
      tracks:[
        { t:"곡 제목", l:"3:42", main:true,       // main:true → 대표곡 (맨 위 + 배지)
          url:"https://youtu.be/영상ID",           // 유튜브 링크 (비우면 재생 불가)
+         sp:"https://open.spotify.com/track/곡ID", // 스포티파이 곡 링크 (비우면 스포티파이 재생 불가)
          img:"images/곡사진.jpg" },               // 곡 사진 (비우면 앨범 사진 사용)
        { t:"다른 곡", l:"4:10", url:"https://youtu.be/영상ID" }
      ]
@@ -38,11 +40,12 @@ const site = {
 const albums = [
   { id:"ex-file", title:"ex file", artist:"Ruel", year:2024, genre:"pop",
     cover:"image/ruel.png", colors:["#1b2a49","#6a3df0"],
+    spotify:"",
     desc:"설명글을 추가하시오",
     tracks:[
-      { t:"Night Drive", l:"3:42", main:true, url:"https://open.spotify.com/intl-ko/track/1abFkY2jm6KDFMZ7RD9YJh", img:"image/painkiller.png" },
-      { t:"Neon Rain",   l:"4:10", url:"", img:"" },
-      { t:"Last Exit",   l:"3:25", url:"", img:"" }
+      { t:"Night Drive", l:"3:42", main:true, url:"https://www.youtube.com/watch?v=3YHGEuefsbI&list=PLT1VpimKCSOBqEP4ibGwRqpfoGN3g502T&index=3", sp:"", img:"image/painkiller.png" },
+      { t:"Neon Rain",   l:"4:10", url:"", sp:"", img:"" },
+      { t:"Last Exit",   l:"3:25", url:"", sp:"", img:"" }
     ] },
   { id:"slow-bloom", title:"Slow Bloom", artist:"아티스트 B", year:2023, genre:"Ambient",
     cover:"", colors:["#0f3d2e","#d96f8a"],

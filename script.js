@@ -4,6 +4,8 @@ const grad = c => `linear-gradient(135deg, ${c[0]}, ${c[1]})`;
 // 사진이 없거나 경로가 틀려도 색 그라데이션이 대신 보이도록 겹쳐서 지정
 const bgOf = a => (a.cover ? `url('${a.cover}'), ` : "") + grad(a.colors);
 const trackBg = (t, a) => t.img ? `url('${t.img}'), ${bgOf(a)}` : bgOf(a);
+// Spotify 검색 주소 (곡 제목 + 아티스트로 자동 검색)
+const spSearch = (q, type) => `https://open.spotify.com/search/${encodeURIComponent(q)}/${type}`;
 const ytId = u => { const m = (u||"").match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? m[1] : null; };
 
 /* --- 목록 + 장르 필터 --- */
@@ -95,6 +97,7 @@ function openPlayer(i){
   $("#pCover").style.backgroundImage = trackBg(t, cur);  // 가운데: 선명하게
   $("#pTitle").textContent = t.t;
   $("#pArtist").textContent = cur.artist;
+  $("#pSpBtn").href = spSearch(`${t.t} ${cur.artist}`, "tracks");       // 이 곡: Spotify 곡 검색
   setBar(0); $("#pCur").textContent = "0:00"; $("#pDur").textContent = t.l || "0:00";
   $("#pToggle").textContent = "▶";
   $("#player").classList.remove("playing");
@@ -120,6 +123,7 @@ function closePlayer(){
   stopTick();
   if(yt && yt.stopVideo) yt.stopVideo();
 }
+$("#pSpBtn").addEventListener("click", () => { if(yt && yt.pauseVideo) yt.pauseVideo(); });   // Spotify로 넘어가면 유튜브 소리는 멈춤
 $("#pClose").onclick = closePlayer;
 $("#pLogo").onclick = closePlayer;
 $("#pPrev").onclick = () => openPlayer(idx - 1);
