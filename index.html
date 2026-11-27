@@ -9,7 +9,7 @@
 <body>
   <header class="top">
     <a href="#" class="logo">그냥</a>
-    <nav id="filters" aria-label="장르 필터"></nav>
+    <nav id="filters" aria-label="곡 / 음반 보기"></nav>
   </header>
 
   <!-- 1) 목록 화면 -->
@@ -22,7 +22,14 @@
       </div>
       <span class="scroll-hint" aria-hidden="true">↓</span>
     </section>
-    <div id="grid" class="grid"></div>
+    <div id="panes" class="panes">
+      <!-- 곡 보기 (앨범 목록) -->
+      <div id="grid" class="grid pane"></div>
+      <!-- 음반 보기 (LP 모양, 누르면 오른쪽에 설명글) -->
+      <section id="records" class="records pane" hidden>
+        <div class="rec-list" id="recList"></div>
+      </section>
+    </div>
     <section class="team" id="team">
       <h2>About us</h2>
       <div class="team-grid" id="teamGrid"></div>
@@ -39,7 +46,6 @@
         <div class="hero-text">
           <h1 id="dTitle"></h1>
           <p class="meta" id="dMeta"></p>
-          <p class="desc" id="dDesc"></p>
         </div>
       </div>
     </section>
@@ -75,6 +81,20 @@
         </div>
       </div>
       <div class="p-lyrics" id="pLyrics"><div class="p-lines" id="pLines"></div></div>
+    </div>
+  </div>
+
+  <!-- 4) 음반 설명 화면 (음반을 누르면 위에 뜸: 뒷배경은 흐리게, 음반은 선명하게, 설명은 오른쪽) -->
+  <div id="recView" role="dialog" aria-label="음반 설명">
+    <div class="rv-bg" id="rvBg"></div>
+    <button class="rv-close" id="rvClose" aria-label="닫기">✕</button>
+    <div class="rv-body" id="rvBody">
+      <div class="rv-disc"><div class="disc-spin"><div class="disc-label" id="rvLabel"></div></div></div>
+      <div class="rv-info">
+        <h2 id="rvTitle"></h2>
+        <p class="meta" id="rvMeta"></p>
+        <p class="rec-desc" id="rvDesc"></p>
+      </div>
     </div>
   </div>
 

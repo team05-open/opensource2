@@ -9,16 +9,72 @@ const spSearch = (q, type) => `https://open.spotify.com/search/${encodeURICompon
 const ytId = u => { const m = (u||"").match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? m[1] : null; };
 
 /* --- 목록 + 장르 필터 --- */
-let genre = "전체";
+let tab = "곡", tabTimer = null;
 function renderFilters(){
-  const genres = ["전체", ...new Set(albums.map(a => a.genre))];
-  $("#filters").innerHTML = genres.map(g =>
-    `<button class="${g===genre?'on':''}" data-g="${g}">${g}</button>`).join("");
-  $("#filters").querySelectorAll("button").forEach(b => b.onclick = () => { genre = b.dataset.g; renderFilters(); renderGrid(); });
+  $("#filters").innerHTML = ["곡","음반"].map(g =>
+    `<button class="${g===tab?'on':''}" data-g="${g}">${g}</button>`).join("");
+  $("#filters").querySelectorAll("button").forEach(b => b.onclick = () => setTab(b.dataset.g));
 }
+/* 곡 <-> 음반 전환: 나가는 쪽이 하나씩 차례로 옆으로 빠져나간 뒤, 반대편에서 하나씩 차례로 들어옴
+   (음반으로 갈 때: 앨범은 오른쪽으로 나가고 음반은 왼쪽에서 펼쳐짐 / 돌아올 땐 반대)
+   들어오는 쪽이 조금 늦게(WAIT) 시작해서 서로 겹치지 않음 */
+const STEP = 45, DUR = 600, WAIT = 420;   // style.css 의 --step / --dur / --wait 와 같은 값(ms)
+function setTab(next){
+  if(next === tab) return;
+  const grid = $("#grid"), rec = $("#records"), panes = $("#panes"), toRec = next === "음반";
+  const inP = toRec ? rec : grid, outP = toRec ? grid : rec;
+  clearTimeout(tabTimer);
+  panes.classList.add("moving"); document.body.classList.add("tabmoving");   // 움직이는 동안만 GPU 가속 + 상단바 블러 끔
+  void panes.offsetWidth;
+  inP.hidden = false;
+  outP.classList.remove("entering");
+  inP.classList.remove("off-left", "off-right");
+  inP.classList.add("entering", toRec ? "off-left" : "off-right");   // 들어오기 전 시작 위치
+  void inP.offsetWidth;
+  inP.classList.remove("off-left", "off-right");                      // -> 제자리로
+  outP.classList.add(toRec ? "off-right" : "off-left");               // 나가는 쪽 옆으로 이동
+  tab = next; renderFilters();
+  const y = $("#panes").getBoundingClientRect().top + window.scrollY - 70;
+  if(window.scrollY < y - 10) window.scrollTo({ top: y, behavior: "smooth" });   // 첫 화면에서 눌렀으면 목록 위치로
+  const total = WAIT + Math.min(albums.length - 1, 10) * STEP + DUR + 100;      // 맨 마지막 것이 다 움직일 때까지
+  tabTimer = setTimeout(() => {
+    outP.hidden = true; outP.classList.remove("off-left", "off-right");
+    inP.classList.remove("entering");
+    panes.classList.remove("moving"); document.body.classList.remove("tabmoving");
+  }, total);
+}
+
+/* 음반 보기: LP 모양 + 누르면 오른쪽에 설명글 (곡 재생 없음) */
+function renderRecords(){
+  $("#recList").innerHTML = albums.map((a, i) => `
+    <button class="rec" data-id="${a.id}" aria-label="${a.title}" style="--i:${Math.min(i, 10)}">
+      <div class="disc"><div class="disc-spin"><div class="disc-label" style="background-image:${bgOf(a)}"></div></div></div>
+      <h3>${a.title}</h3><p>${a.artist}</p>
+    </button>`).join("");
+  $("#recList").querySelectorAll(".rec").forEach(b => b.onclick = () => selectRecord(b.dataset.id));
+}
+function selectRecord(id){
+  const a = albums.find(x => x.id === id);
+  const bg = bgOf(a);
+  $("#rvBg").style.backgroundImage = bg;                 // 뒷배경: 흐릿하게
+  $("#rvLabel").style.backgroundImage = bg;              // 음반 가운데 라벨: 선명하게
+  $("#rvTitle").textContent = a.title;
+  $("#rvMeta").textContent = `${a.artist} · ${a.year} · ${a.genre}`;
+  $("#rvDesc").textContent = a.desc || "";  // 설명글: 오른쪽
+  $("#recView").classList.add("open");
+  document.body.classList.add("lock");
+  $("#rvClose").focus({ preventScroll:true });
+}
+function closeRecord(){
+  $("#recView").classList.remove("open");
+  if(!$("#player").classList.contains("open")) document.body.classList.remove("lock");
+}
+$("#rvClose").onclick = closeRecord;
+$("#rvBody").onclick = e => { if(e.target === $("#rvBody")) closeRecord(); };   // 빈 곳을 눌러도 닫힘
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeRecord(); });
 function renderGrid(){
-  $("#grid").innerHTML = albums.filter(a => genre==="전체" || a.genre===genre).map(a => `
-    <a class="card" href="#${a.id}">
+  $("#grid").innerHTML = albums.map((a, i) => `
+    <a class="card" href="#${a.id}" style="--i:${Math.min(i, 10)}">
       <div class="cover" style="background-image:${bgOf(a)}"></div>
       <h3>${a.title}</h3><p>${a.artist}</p>
     </a>`).join("");
@@ -32,7 +88,6 @@ function renderDetail(a){
   $("#heroCover").style.backgroundImage = bgOf(a);
   $("#dTitle").textContent = a.title;
   $("#dMeta").textContent = `${a.artist} · ${a.year} · ${a.genre}`;
-  $("#dDesc").textContent = a.desc;
   list = [...a.tracks].sort((x,y) => (y.main?1:0) - (x.main?1:0)); // 대표곡 먼저
   $("#trackList").innerHTML = list.map((t,i) => `
     <li data-i="${i}" tabindex="0" role="button" class="${ytId(t.url)?'':'nolink'}">
@@ -197,7 +252,7 @@ window.addEventListener("resize", () => placeLyrics(lyIdx));
 let wasDetail = false, routeTimer = null;
 const jump = y => window.scrollTo({ top: y, behavior: "instant" });
 function route(){
-  closePlayer();
+  closePlayer(); closeRecord();
   clearTimeout(routeTimer);
   const a = albums.find(x => x.id === location.hash.slice(1));
   const detail = $("#detail"), home = $("#home");
@@ -218,7 +273,7 @@ function route(){
       detail.hidden = true; detail.classList.remove("leaving");
       home.hidden = false; $("#filters").hidden = false;
       home.classList.remove("fadein"); void home.offsetWidth; home.classList.add("fadein");
-      jump($("#grid").getBoundingClientRect().top + window.scrollY - 70);   // 앨범 목록 위치로
+      jump($("#panes").getBoundingClientRect().top + window.scrollY - 70);   // 앨범 목록 위치로
       wasDetail = false;
       onScroll();
     }, 350);
@@ -270,4 +325,4 @@ function renderTeam(){
     </article>`).join("");
 }
 
-setupSite(); renderTeam(); renderFilters(); renderGrid(); route(); onScroll();
+setupSite(); renderTeam(); renderFilters(); renderGrid(); renderRecords(); route(); onScroll();

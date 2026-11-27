@@ -11,12 +11,10 @@
      genre:"장르",                 // 같은 장르끼리 위쪽 버튼으로 묶임
      cover:"images/앨범사진.jpg", 컬러는 앨범 표지 없을때 표시되는거   // 앨범 대표 사진. 비우면 아래 colors 색 그라데이션
      colors:["#222222","#888888"],
-     spotify:"https://open.spotify.com/album/앨범ID",   // 스포티파이 앨범 링크 (곡 링크가 없을 때 대신 재생됨. 비워도 됨)
-     desc:"설명글을 추가하시오",
+     desc:"음반 설명글",                 // ★ 음반 설명글: 음반 탭에서 LP판을 누르면 오른쪽에 뜸. 줄바꿈은 \n
      tracks:[
        { t:"곡 제목", l:"3:42", main:true,       // main:true → 대표곡 (맨 위 + 배지)
          url:"https://youtu.be/영상ID",           // 유튜브 링크 (비우면 재생 불가)
-         sp:"https://open.spotify.com/track/곡ID", // 스포티파이 곡 링크 (비우면 스포티파이 재생 불가)
          img:"images/곡사진.jpg" },               // 곡 사진 (비우면 앨범 사진 사용)
        { t:"다른 곡", l:"4:10", url:"https://youtu.be/영상ID" }
      ]
@@ -37,19 +35,25 @@ const site = {
   fontBody:  ""
 };
 
+/* ===== ★ 음반 설명글 입력하는 곳 =====
+   각 앨범의 desc:"..." 따옴표 안에 쓰면 됩니다. (음반 탭에서 LP판을 누르면 오른쪽에 뜨는 글)
+   - 줄바꿈      : 글 중간에 \n 을 쓰세요.         예) desc:"첫째 줄\n둘째 줄",
+   - 큰따옴표(") : 글 안에서는 쓰지 말고 작은따옴표(')를 쓰세요. (꼭 필요하면 \" 로)
+   - 긴 글       : 따옴표 대신 백틱(`)으로 감싸면 엔터로 줄바꿈해도 됩니다.
+   예) desc:"2024년에 발매된 앨범.\n밤 드라이브에 어울리는 곡들이 담겨 있어요.",
+   (앨범 상세 화면에는 설명글이 나오지 않아요 - 음반 탭 전용) */
 const albums = [
   { id:"ex-file", title:"ex file", artist:"Ruel", year:2024, genre:"pop",
     cover:"image/ruel.png", colors:["#1b2a49","#6a3df0"],
-    spotify:"",
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
-      { t:"Night Drive", l:"3:42", main:true, url:"https://www.youtube.com/watch?v=3YHGEuefsbI&list=PLT1VpimKCSOBqEP4ibGwRqpfoGN3g502T&index=3", sp:"", img:"image/painkiller.png" },
-      { t:"Neon Rain",   l:"4:10", url:"", sp:"", img:"" },
-      { t:"Last Exit",   l:"3:25", url:"", sp:"", img:"" }
+      { t:"Night Drive", l:"3:42", main:true, url:"https://www.youtube.com/watch?v=3YHGEuefsbI&list=PLT1VpimKCSOBqEP4ibGwRqpfoGN3g502T&index=3", img:"image/painkiller.png" },
+      { t:"Neon Rain",   l:"4:10", url:"", img:"" },
+      { t:"Last Exit",   l:"3:25", url:"", img:"" }
     ] },
   { id:"slow-bloom", title:"Slow Bloom", artist:"아티스트 B", year:2023, genre:"Ambient",
     cover:"", colors:["#0f3d2e","#d96f8a"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Slow Bloom",  l:"5:02", main:true, url:"" },
       { t:"Petals",      l:"4:48", url:"" },
@@ -57,7 +61,7 @@ const albums = [
     ] },
   { id:"paper-sun", title:"Paper Sun", artist:"아티스트 C", year:2022, genre:"Indie",
     cover:"", colors:["#f2b134","#7a2e1d"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Paper Sun",   l:"3:18", main:true, url:"" },
       { t:"Porch Light", l:"2:57", url:"" },
@@ -65,7 +69,7 @@ const albums = [
     ] },
   { id:"static-hymn", title:"Static Hymn", artist:"아티스트 D", year:2024, genre:"Experimental",
     cover:"", colors:["#222222","#bbbbbb"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Static Hymn", l:"7:01", main:true, url:"" },
       { t:"Low Choir",   l:"4:33", url:"" }
@@ -73,7 +77,7 @@ const albums = [
   ,
   { id:"midnight-letter", title:"Midnight Letter", artist:"아티스트 E", year:2024, genre:"Jazz",
     cover:"", colors:["#2b1a12","#c98b4a"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Midnight Letter", l:"4:20", main:true, url:"" },
       { t:"Smoke & Piano",   l:"5:05", url:"" },
@@ -81,7 +85,7 @@ const albums = [
     ] },
   { id:"blue-hour", title:"Blue Hour", artist:"아티스트 F", year:2023, genre:"R&B",
     cover:"", colors:["#0b2a4a","#4aa3c9"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Blue Hour",  l:"3:30", main:true, url:"" },
       { t:"Afterglow",  l:"3:12", url:"" },
@@ -89,7 +93,7 @@ const albums = [
     ] },
   { id:"quiet-room", title:"Quiet Room", artist:"아티스트 G", year:2021, genre:"Classical",
     cover:"", colors:["#3a3a3a","#e8e2d4"],
-    desc:"설명글을 추가하시오",
+    desc:"음반 설명글을 입력하세요",   // ★ 여기에 음반 설명글 입력 (줄바꿈 = \n)
     tracks:[
       { t:"Quiet Room",   l:"6:40", main:true, url:"" },
       { t:"Window Light", l:"5:15", url:"" },
