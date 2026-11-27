@@ -1,0 +1,204 @@
+:root{
+  --bg:#000; --panel:#141414; --line:#2a2a2a; --text:#f2f2f2; --sub:#8f8f8f;
+  --font:"Pretendard","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5}
+a{color:inherit;text-decoration:none}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+/* 상단바 */
+.top{position:sticky;top:0;z-index:20;display:flex;gap:24px;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;padding:16px 24px;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(10px)}
+.logo{font-weight:700;font-size:1.1rem;letter-spacing:.02em}
+#filters{display:flex;gap:8px;flex-wrap:wrap}
+#filters button{background:transparent;color:var(--sub);border:1px solid var(--line);
+  padding:6px 14px;border-radius:4px;font:inherit;font-size:.85rem;cursor:pointer}
+#filters button.on{background:#fff;color:#000;border-color:#fff}
+
+/* 앨범 그리드 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px;padding:24px}
+.card{display:block}
+.cover{aspect-ratio:3/4;background-size:cover;background-position:center;border-radius:2px;
+  transition:transform .3s,filter .3s}
+.card:hover .cover{transform:scale(1.02);filter:brightness(1.1)}
+.card:nth-child(3n+2) .cover{aspect-ratio:1/1}
+.card h3{font-size:.9rem;margin-top:10px}
+.card p{font-size:.8rem;color:var(--sub)}
+
+/* 상세 - 히어로 */
+.hero{position:relative;min-height:100vh;display:grid;place-items:center;overflow:hidden;padding:80px 24px 40px}
+.hero-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;
+  filter:blur(40px) brightness(.45) saturate(1.2)}
+.back{position:absolute;top:20px;left:24px;z-index:2;font-size:.9rem;color:#ddd}
+.hero-inner{position:relative;z-index:1;display:flex;gap:48px;align-items:center;
+  max-width:960px;width:100%;
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:40px}
+.hero-cover{flex:0 0 min(360px,40%);aspect-ratio:1/1;background-size:cover;background-position:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.hero-text h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.15}
+.meta{margin-top:8px;color:var(--sub);font-size:.9rem}
+.desc{margin-top:20px;font-size:.8rem;color:#bbb;max-width:34em}
+
+/* 상세 - 수록곡 */
+.tracks{max-width:760px;margin:0 auto;padding:56px 24px 120px}
+.tracks h2{font-size:1.2rem;margin-bottom:16px}
+.tracks ol{list-style:none;counter-reset:t}
+.tracks li{counter-increment:t;display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.tracks li::before{content:counter(t);width:1.5em;color:var(--sub);font-size:.85rem}
+.tracks .name{flex:1}
+.tracks .len{color:var(--sub);font-size:.85rem}
+.badge{font-size:.7rem;background:#fff;color:#000;padding:2px 8px;border-radius:3px}
+
+@media (max-width:700px){
+  .hero-inner{flex-direction:column;padding:24px;gap:24px}
+  .hero-cover{flex:none;width:100%}
+}
+
+/* 수록곡 클릭 가능 */
+.tracks li{cursor:pointer;transition:background .2s}
+.tracks li:hover{background:#111}
+.tracks li.nolink .name::after{content:" (링크 없음)";color:var(--sub);font-size:.75rem}
+.tracks .play{color:var(--sub);font-size:.8rem;width:1em}
+.tracks li:hover .play{color:#fff}
+
+/* 재생 화면 */
+body.lock{overflow:hidden}
+#player{position:fixed;inset:0;z-index:100;display:grid;place-items:center;overflow-y:auto;padding:56px 20px 32px}
+.p-bg{position:fixed;inset:-60px;background-size:cover;background-position:center;
+  filter:blur(45px) brightness(.4) saturate(1.2)}
+.p-close{position:fixed;top:16px;right:20px;z-index:2;background:rgba(0,0,0,.4);color:#fff;
+  border:1px solid rgba(255,255,255,.2);width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+.p-body{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:14px;
+  text-align:center;width:min(560px,100%)}
+.p-cover{width:min(340px,70vw);aspect-ratio:1/1;background-size:cover;background-position:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.7)}
+.p-body h2{font-size:1.4rem;margin-top:6px}
+.p-body p{color:#bbb;font-size:.9rem}
+.p-nav{display:flex;gap:12px}
+.p-nav button{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);
+  padding:8px 18px;border-radius:6px;font:inherit;font-size:.85rem;cursor:pointer}
+.p-nav button:hover{background:rgba(255,255,255,.2)}
+
+/* 진행바 플레이어 (영상은 화면에 보이지 않음) */
+.p-yt{position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+.p-msg{color:#ddd;font-size:.85rem}
+.p-ctrl{width:min(420px,100%);display:flex;flex-direction:column;gap:8px;margin-top:8px}
+#pBar{--p:0%;-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;cursor:pointer;
+  background:linear-gradient(to right,#fff var(--p),rgba(255,255,255,.25) var(--p))}
+#pBar::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;border:0}
+#pBar::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fff;border:0}
+.p-time{display:flex;justify-content:space-between;font-size:.75rem;color:#bbb}
+.p-nav{justify-content:center;align-items:center}
+.p-nav button.main{width:52px;height:52px;border-radius:50%;background:#fff;color:#000;font-size:1.1rem;padding:0}
+
+/* 첫 화면 소개 + 배경 */
+.top{background:transparent;backdrop-filter:none;transition:background .3s}
+.top.solid{background:rgba(0,0,0,.8);backdrop-filter:blur(10px)}
+.home-bg{position:fixed;inset:-60px;z-index:-1;background-size:cover;background-position:center;
+  filter:blur(30px) brightness(.5) saturate(1.2)}
+.intro{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;
+  padding:80px 24px 80px clamp(24px,14vw,240px)}
+.intro-text h1{font-size:clamp(2.8rem,8vw,6.5rem);line-height:1.05;letter-spacing:-.02em}
+.intro-text p{margin-top:18px;font-size:.95rem;color:#ccc;max-width:30em;white-space:pre-line}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:#aaa;font-size:1.2rem}
+.grid{padding-top:48px}
+.grid{min-height:100vh;align-content:start}
+
+/* 글씨체: 실제 이름은 data.js 의 fontTitle / fontBody 에서 바꿉니다 */
+body{font-family:var(--font-body,var(--font))}
+.logo,.intro-text h1,.hero-text h1,.card h3,.tracks h2,.p-body h2{font-family:var(--font-title,var(--font-body,var(--font)))}
+
+/* 상단바를 화면 위에 띄워서 배경이 맨 위까지 채워지게 */
+.top{position:fixed;top:0;left:0;right:0}
+.back{top:76px}
+
+/* 만든 사람 카드 */
+.team{max-width:1100px;margin:0 auto;padding:80px 24px 120px}
+.team h2{font-size:1.3rem;margin-bottom:24px}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+.member{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px 18px;text-align:center}
+.avatar{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;background:#262626 center/cover;
+  display:grid;place-items:center;font-size:1.5rem;color:#bbb}
+.member h3{font-size:1rem}
+.member p{margin-top:6px;font-size:.8rem;color:var(--sub);line-height:1.5}
+
+/* 재생 화면 뒤가 비쳐 보이지 않게 기본 검정 바탕 */
+#player{background:#000}
+
+/* ===== 애니메이션 ===== */
+/* 앨범 들어갈 때: 아래에서 부드럽게 올라옴 / 나올 때: 반대로 내려가며 사라짐 */
+@keyframes rise{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sink{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(70px)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+#detail.enter{animation:rise .6s cubic-bezier(.2,.7,.2,1) backwards}
+#detail.leaving{animation:sink .35s cubic-bezier(.5,0,.8,.4) forwards;pointer-events:none}
+#home.fadein{animation:fadein .4s ease backwards}
+
+/* 곡 재생 화면: 점점 진해지며 나타나고, 닫을 땐 역으로 옅어지며 사라짐 */
+#player{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease,visibility 0s linear .5s}
+#player.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s ease,visibility 0s}
+.p-body{opacity:0;transform:translateY(18px) scale(.98);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+#player.open .p-body{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  #detail.enter,#detail.leaving,#home.fadein{animation:none}
+  #player,.p-body{transition:none}
+}
+
+/* ===== 재생 화면: 원반 + 가사 배치 ===== */
+#player{display:flex}
+.p-body{display:grid;grid-template-columns:auto minmax(280px,380px);gap:0 clamp(28px,5vw,72px);
+  align-items:center;justify-content:center;width:min(1040px,100%);margin:auto;text-align:center}
+.p-left{--s:clamp(190px,22vw,300px);width:calc(var(--s)*1.62);display:flex;flex-direction:column;align-items:center;gap:14px}
+.p-stage{position:relative;width:100%;height:var(--s)}
+.p-cover{position:absolute;left:0;top:0;width:var(--s);height:var(--s);z-index:2}
+.p-ctrl{width:100%}
+
+/* 원반 (사진 뒤에서 오른쪽으로 빠져나와 재생 중에 돌아감) */
+.p-disc{position:absolute;top:0;left:calc(var(--s)*.62);width:var(--s);height:var(--s);z-index:1;
+  opacity:0;transform:translateX(-38%);
+  transition:transform .9s cubic-bezier(.2,.7,.2,1) .25s,opacity .4s ease .25s}
+#player.open .p-disc{opacity:1;transform:none}
+.p-disc-spin{position:relative;width:100%;height:100%;border-radius:50%;box-shadow:0 18px 50px rgba(0,0,0,.6);
+  background:
+    conic-gradient(from 0deg,transparent 0 18%,rgba(255,255,255,.09) 25%,transparent 32%,transparent 68%,rgba(255,255,255,.09) 75%,transparent 82%),
+    repeating-radial-gradient(circle at center,#0b0b0b 0 2px,#1a1a1a 2px 4px);
+  animation:spin 5s linear infinite;animation-play-state:paused}
+#player.playing .p-disc-spin{animation-play-state:running}
+.p-disc-label{position:absolute;left:50%;top:50%;width:38%;height:38%;transform:translate(-50%,-50%);
+  border-radius:50%;background-size:cover;background-position:center;border:3px solid #111}
+.p-disc-label::after{content:"";position:absolute;left:50%;top:50%;width:14%;height:14%;transform:translate(-50%,-50%);
+  border-radius:50%;background:#0b0b0b}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 가사: 지금 부르는 줄이 가운데에 오고, 한 줄 끝날 때마다 위로 올라감 */
+.p-lyrics{position:relative;overflow:hidden;height:min(62vh,440px);text-align:left;
+  -webkit-mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent);
+  mask-image:linear-gradient(transparent,#000 20%,#000 80%,transparent)}
+.p-lines{position:absolute;left:0;right:0;top:0;padding-right:10px;transition:transform .55s cubic-bezier(.3,.7,.2,1)}
+.ly{padding:9px 0;font-size:1.15rem;line-height:1.45;color:rgba(255,255,255,.3);cursor:pointer;
+  transform-origin:left center;transition:color .4s ease,transform .4s ease}
+.ly.active{color:#fff;transform:scale(1.1)}
+.p-lyrics.plain{overflow-y:auto;-webkit-mask-image:none;mask-image:none}
+.p-lyrics.plain .p-lines{position:static;transform:none!important}
+.p-lyrics.plain .ly{color:rgba(255,255,255,.75);cursor:default}
+.ly-empty{color:rgba(255,255,255,.4);font-size:.9rem;padding:40px 0}
+
+@media (max-width:860px){
+  .p-body{grid-template-columns:1fr;row-gap:20px}
+  .p-left{--s:min(44vw,190px)}
+  .p-lyrics{height:210px}
+}
+@media (prefers-reduced-motion:reduce){ .p-disc-spin{animation:none} .p-disc{transition:none} .p-lines{transition:none} }
+
+/* 재생 화면 왼쪽 위 로고 (누르면 재생 화면만 닫혀서 앨범 화면으로) */
+.p-logo{position:fixed;top:16px;left:24px;z-index:2;background:none;border:0;color:#fff;cursor:pointer;
+  font-family:var(--font-title,var(--font-body,var(--font)));font-weight:700;font-size:1.1rem;letter-spacing:.02em;line-height:1.5;padding:0}
+.p-logo:hover{opacity:.75}
+
+/* 숨은 재생기: 재생 화면 효과(투명, 이동)의 영향을 받지 않게 바깥에 두고, 유튜브 최소 크기(200px)를 지킴 */
+.p-yt{position:fixed;left:0;bottom:0;width:200px;height:200px;opacity:.001;pointer-events:none;overflow:hidden;z-index:-1}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>그냥</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a href="#" class="logo">그냥</a>
+    <nav id="filters" aria-label="장르 필터"></nav>
+  </header>
+
+  <!-- 1) 목록 화면 -->
+  <main id="home" class="view">
+    <div class="home-bg" id="homeBg"></div>
+    <section class="intro">
+      <div class="intro-text" id="introText">
+        <h1 id="siteTitle"></h1>
+        <p id="siteDesc"></p>
+      </div>
+      <span class="scroll-hint" aria-hidden="true">↓</span>
+    </section>
+    <div id="grid" class="grid"></div>
+    <section class="team" id="team">
+      <h2>About us</h2>
+      <div class="team-grid" id="teamGrid"></div>
+    </section>
+  </main>
+
+  <!-- 2) 앨범 상세 화면 -->
+  <main id="detail" class="view" hidden>
+    <section class="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <a href="#" class="back">← 목록</a>
+      <div class="hero-inner">
+        <div class="hero-cover" id="heroCover"></div>
+        <div class="hero-text">
+          <h1 id="dTitle"></h1>
+          <p class="meta" id="dMeta"></p>
+          <p class="desc" id="dDesc"></p>
+        </div>
+      </div>
+    </section>
+    <section class="tracks">
+      <h2>수록곡</h2>
+      <ol id="trackList"></ol>
+    </section>
+  </main>
+
+  <!-- 3) 재생 화면 (곡을 누르면 위에 뜸) -->
+  <div id="player" role="dialog" aria-label="곡 재생">
+    <div class="p-bg" id="pBg"></div>
+    <button class="p-logo" id="pLogo" aria-label="앨범으로 돌아가기"></button>
+    <button class="p-close" id="pClose" aria-label="닫기">✕</button>
+    <div class="p-body">
+      <div class="p-left">
+        <div class="p-stage">
+          <div class="p-disc" id="pDisc"><div class="p-disc-spin"><div class="p-disc-label" id="pDiscLabel"></div></div></div>
+          <div class="p-cover" id="pCover"></div>
+        </div>
+        <h2 id="pTitle"></h2>
+        <p id="pArtist"></p>
+        <p class="p-msg" id="pMsg" hidden></p>
+        <div class="p-ctrl">
+          <input type="range" id="pBar" min="0" max="1000" value="0" aria-label="재생 위치">
+          <div class="p-time"><span id="pCur">0:00</span><span id="pDur">0:00</span></div>
+          <div class="p-nav">
+            <button id="pPrev" aria-label="이전 곡">⏮</button>
+            <button id="pToggle" class="main" aria-label="재생/일시정지">▶</button>
+            <button id="pNext" aria-label="다음 곡">⏭</button>
+          </div>
+        </div>
+      </div>
+      <div class="p-lyrics" id="pLyrics"><div class="p-lines" id="pLines"></div></div>
+    </div>
+  </div>
+
+  <!-- 소리를 내는 숨은 유튜브 재생기 (화면 효과와 상관없이 항상 같은 자리) -->
+  <div class="p-yt"><div id="pYT"></div></div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+  <script src="https://www.youtube.com/iframe_api" async></script>
+</body>
+</html>
