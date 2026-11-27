@@ -40,7 +40,7 @@ const albums = [
     cover:"image/ruel.png", colors:["#1b2a49","#6a3df0"],
     desc:"설명글을 추가하시오",
     tracks:[
-      { t:"Night Drive", l:"3:42", main:true, url:"https://www.youtube.com/watch?v=3YHGEuefsbI&list=PLT1VpimKCSOBqEP4ibGwRqpfoGN3g502T&index=3", img:"image/painkiller.png" },
+      { t:"Night Drive", l:"3:42", main:true, url:"https://open.spotify.com/intl-ko/track/1abFkY2jm6KDFMZ7RD9YJh", img:"image/painkiller.png" },
       { t:"Neon Rain",   l:"4:10", url:"", img:"" },
       { t:"Last Exit",   l:"3:25", url:"", img:"" }
     ] },
